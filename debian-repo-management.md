@@ -66,6 +66,11 @@ And then merge the snapshots as follows.
 $ aptly snapshot merge pardus-devel-main-merged1 debian-testing-main1 pardus-devel-main1 
 ```
 
+**NOTE:** Order of the source snapshots matters. Aptly merges the snaphots from
+ left to right. In other words, aply favors the packages in the first source
+ snapshot out of packages with the same (name, architecture) pair. Also see
+ `-latest` and `-no-remove` [flags][2] in aptly.
+
 ## Publish the snapshots
 
 Publish the snapshots as follows.
@@ -93,3 +98,4 @@ an ISO file, we should extract this into
 
 
 [1]:https://www.aptly.info/
+[2]:https://www.aptly.info/doc/aptly/snapshot/merge/
