@@ -8,7 +8,7 @@ We use [aptly][1] to manage our debian repositories.
 
 ## Creating snapshots from the local mirrors
 
-Assuming we have the following local mirrors
+Assuming we have the following local mirrors,
 
 ```
 $ aptly mirror list
@@ -45,7 +45,7 @@ the directory `path/to/packages` and adds the binary and source packages it
 finds to the local repo `pardus-devel-main`.
 
 ```
-$ aptly repo add pardus-devel-main path/to/packages/
+$ aptly repo add -force-replace pardus-devel-main path/to/packages/
 ```
 
 You can also add a single package to any local repo by explicitly giving the
@@ -63,20 +63,20 @@ $ aptly snapshot create pardus-devel-main1 from repo pardus-devel-main
 And then merge the snapshots as follows.
 
 ```
-$ aptly snapshot merge pardus-devel-main-merged1 debian-testing-main1 pardus-devel-main1 
+$ aptly snapshot merge merged-pardus-devel-main1 debian-testing-main1 pardus-devel-main1 
 ```
 
-**NOTE:** Order of the source snapshots matters. Aptly merges the snaphots from
- left to right. In other words, aply favors the packages in the first source
- snapshot out of packages with the same (name, architecture) pair. Also see
- `-latest` and `-no-remove` [flags][2] in aptly.
+**NOTE:** The order of the source snapshots matters in the command line. Aptly
+ merges the snapshots from left to right. It favors the packages in the
+ rightmost source snapshot out of packages with the same (name, architecture)
+ pair. Also see `-latest` and `-no-remove` [flags][2] in aptly.
 
 ## Publish the snapshots
 
 Publish the snapshots as follows.
 
 ```
-$ aptly publish snapshot -architectures="i386,source,amd64" -gpg-key="B8B5F2D5" -component=main,contrib,non-free -distribution=pardus-devel pardus-devel-main-merged1 debian-testing-contrib1 debian-testing-non-free1 pardus
+$ aptly publish snapshot -architectures="i386,source,amd64" -gpg-key="B8B5F2D5" -component=main,contrib,non-free -distribution=pardus-devel merged-pardus-devel-main1 debian-testing-contrib1 debian-testing-non-free1 pardus
 ```
 
 Because `pardus-devel-contrib` and `pardus-devel-non-free` local repos are
@@ -84,8 +84,35 @@ empty, we can not take their snapshots. When we add packages to these local
 repos, We merge their snapshots with their corresponding debian testing
 snapshots and publish them. For the time being, we publish
 `debian-testing-contrib1` and `debian-testing-non-free1` snapshots, instead of
-`pardus-devel-contrib-merged1` and `pardus-devel-non-free-merged1`.
+`merged-pardus-devel-contrib1` and `merged-pardus-devel-non-free1`.
 
+
+## Switching published snapshots
+
+Add new packages to the local repo.
+
+```
+$ aptly repo add -force-replace pardus-devel-main path/to/package/
+```
+
+Take a new snapshot of the local repo.
+
+```
+$ aptly snapshot create pardus-devel-main2 from repo pardus-devel-main
+```
+
+Merge snapshots
+
+```
+$ aptly snapshot merge merged-pardus-devel-main2 debian-testing-main1 pardus-devel-main2 
+```
+
+Following command switches from `merged-pardus-devel-main1` snapshot to
+`merged-pardus-devel-main2` snapshot in the published snapshot `pardus/pardus-devel`.
+
+```
+$ aptly publish switch -component=main,contrib,non-free pardus-devel pardus merged-pardus-devel-main2 debian-testing-contrib1 debian-testing-non-free1
+```
 
 ## Debian installer
 
