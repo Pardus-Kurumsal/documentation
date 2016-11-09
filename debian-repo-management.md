@@ -121,6 +121,10 @@ When we build `debian-installer` package, we also get a
 an ISO file, we should extract this into
 `/srv/mirrors/public/pardus/dists/pardus-devel/main`.
 
+```
+tar -xf /tmp/packages/debian-installer/debian-installer-images_20160630pardus2_amd64.tar.gz -C /srv/mirrors/public/pardus/dists/pardus-devel/main
+```
+
 **TODO:** I don't know if this is the proper way of doing this!
 
 
