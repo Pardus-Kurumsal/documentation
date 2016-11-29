@@ -18,8 +18,11 @@ sudo debootstrap pardus-devel pardus-devel
 ```
 
 Create the docker image `pardus/pardus-devel`. This is the image that is
-going to run our live build configuration scripts.
+going to run our live build configuration scripts. 
 
 ```
 sudo tar -C pardus-devel -c . | docker import - pardus/pardus-devel
 ```
+
+You can also create `pardus/pardus-package` and `pardus/pardus-test` using the
+command above.
