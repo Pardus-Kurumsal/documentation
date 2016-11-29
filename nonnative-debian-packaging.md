@@ -166,7 +166,7 @@ $ gbp dch -R -c
 ## Repackaging an existing debian package
 
 Import `hello` deb package from Ubuntu xenial. Make sure you have the
-corrsponding deb-src in your `/etc/apt/sources.list`.
+corresponding deb-src in your `/etc/apt/sources.list`.
 
 ```
 $ gbp import-dsc --download hello/xenial --pristine-tar --filter=.drone.yml
